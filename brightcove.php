@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Brightcove
+ * @package Brightcove Video Cloud
  * @version 1.0
  */
 /*
-Plugin Name: Brightcove
+Plugin Name: Brightcove Video Cloud
 Plugin URL: 
 Description: An easy to use plugin that inserts Brightcove Video into your Wordpress site. 
 Author: Brightcove

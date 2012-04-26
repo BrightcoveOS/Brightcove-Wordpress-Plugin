@@ -5,7 +5,7 @@
  */
 /*
 Plugin Name: Brightcove
-Plugin URL: 
+Plugin URL: http://wordpress.org/extend/plugins/brightcove/
 Description: An easy to use plugin that inserts Brightcove Video into your Wordpress site. 
 Author: Brightcove
 Version: 1.0
