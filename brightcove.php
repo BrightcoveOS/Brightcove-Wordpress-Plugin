@@ -226,7 +226,7 @@ function add_player_settings($playlistOrVideo, $buttonText) {
               <span class='alignright'></span>
             </th>
             <td>
-             <input class='digits player-data' type='text' name='bcPlayer' id='bc-player-$setting ?>' placeholder='Default ID is $player'/>
+             <input class='digits player-data' type='text' name='bcPlayer' id='bc-player-$setting' placeholder='Default ID is $player'/>
             </td>
           </tr>";
 	}
@@ -242,7 +242,7 @@ function add_player_settings($playlistOrVideo, $buttonText) {
               <span class="alignright"></span>
             </th>
             <td>
-             <input class='digits player-data' type='text' name='bcWidth' id='bc-width<?echo $setting; ?>' placeholder='Default is <?php echo $width; ?> px' />
+             <input class='digits player-data' type='text' name='bcWidth' id='bc-width<?php echo $setting; ?>' placeholder='Default is <?php echo $width; ?> px' />
             </td>
           </tr>
           <tr class='bc-height-row'>
@@ -251,7 +251,7 @@ function add_player_settings($playlistOrVideo, $buttonText) {
               <span class="alignright"></span>
             </th>
             <td>
-             <input class='digits player-data'  type='text' name='bcHeight' id='bc-height<?echo $setting; ?>' placeholder='Default is <?php echo $height; ?> px' />
+             <input class='digits player-data'  type='text' name='bcHeight' id='bc-height<?php echo $setting; ?>' placeholder='Default is <?php echo $height; ?> px' />
             </td>
           </tr>
           </tbody>

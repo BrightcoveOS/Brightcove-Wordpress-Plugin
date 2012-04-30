@@ -23,16 +23,42 @@ playerDataPlayer = {
     "isRef" : false
   };
   
+  
+  //Helper functions for video player
+getDefaultHeight = function () {
+	return $('#bc-default-height').val();
+}
+getDefaultWidth = function () {
+	return $('#bc-default-width').val();
+}
+
+getDefaultPlayerID = function () {
+	return $('#bc-default-player').val();
+}
+
+//Helper functions for playlist player
+getDefaultHeightPlaylist = function () {
+	return $('#bc-default-height-playlist').val();
+}
+
+getDefaultWidthPlaylist = function () {	
+	return $('#bc-default-width-playlist').val();
+}
+
+getDefaultPlayerKeyPlaylist = function () {
+	return $('#bc-default-player-playlist-key').val();
+}
+  
 addPlayer = function (typeOfPlayer)	{
 	hideErrorMessage();
 	var playerHTML;
 	if (typeOfPlayer == 'video')	{
-		playerHTML = replaceTokens(singlePlayerTemplate, playerDataPlayer);
+		playerHTML = replaceTokens(singlePlayerTemplate, playerDataPlayer, typeOfPlayer);
 		$('#dynamic-bc-placeholder-video').html(playerHTML);
 		$('.video-hide').removeClass('hidden');
 
 	} else if (typeOfPlayer == 'playlist') {
-		playerHTML = replaceTokens(playlistPlayerTemplate, playerDataPlaylist);
+		playerHTML = replaceTokens(playlistPlayerTemplate, playerDataPlaylist, typeOfPlayer);
 		$('#dynamic-bc-placeholder-playlist').html(playerHTML);	
 		$('.playlist-hide').removeClass('hidden');
 	} 
@@ -139,36 +165,6 @@ changePlayerID = function (typeOfPlayer) {
 	}
 }
 
-
-
-//Helper functions for video player
-getDefaultHeight = function () {
-	return $('#bc-default-height').val();
-}
-getDefaultWidth = function () {
-	return $('#bc-default-width').val();
-}
-
-getDefaultPlayerID = function () {
-	return $('#bc-default-player').val();
-}
-
-//Helper functions for playlist player
-getDefaultHeightPlaylist = function () {
-	return $('#bc-default-height-playlist').val();
-}
-
-getDefaultWidthPlaylist = function () {	
-	return $('#bc-default-width-playlist').val();
-}
-
-getDefaultPlayerKeyPlaylist = function () {
-	return $('#bc-default-player-playlist-key').val();
-}
-
-
-
-
 updateTab =function (typeOfPlayer) {	
 	if (typeOfPlayer == 'playlist'){
 		$('.video-hide').addClass('hidden');
@@ -189,13 +185,20 @@ updateTab =function (typeOfPlayer) {
 insertShortcode = function(typeOfPlayer) {
  var shortcode;
     if (typeOfPlayer == 'video') {
-      shortcode = '[brightcove videoID='+playerDataPlayer.videoID+' playerID='+playerDataPlayer.playerID+' height='+playerDataPlayer.height+' width='+playerDataPlayer.width+']';
+      shortcode = '[brightcove videoID='+playerDataPlayer.videoID+' playerID='+playerDataPlayer.playerID;
     } else if (typeOfPlayer == 'playlist') {
-      shortcode = '[brightcove playlistID='+playerDataPlaylist.playlistID+' playerKey='+playerDataPlaylist.playerKey +' height='+playerDataPlaylist.height+' width='+playerDataPlaylist.width+']';
+      shortcode = '[brightcove playlistID='+playerDataPlaylist.playlistID+' playerKey='+playerDataPlaylist.playerKey;
     }	
-    	var win = window.dialogArguments || opener || parent || top;
-    	win.send_to_editor(shortcode);
-    }
+    if (playerDataPlayer.height)
+    	shortcode += ' height='+playerDataPlayer.height;
+    if (playerDataPlayer.width)
+    	shortcode += ' width='+playerDataPlayer.width;
+    	
+    shortcode += ']';
+    
+   	var win = window.dialogArguments || opener || parent || top;
+   	win.send_to_editor(shortcode);
+}
     
 hideSettings = function (typeOfPlayer) {
 	if (typeOfPlayer == 'playlist') {
@@ -265,7 +268,7 @@ seeAllPlaylists = function(pageNumber) {
     token = $('#bc-api-key').val();
     /*Create URL that is called to search for videos*/
     var url= [
-      "http://api.brightcove.com/services/library&command=find_all_playlists",
+      "command=find_all_playlists",
       "&token=", encodeURIComponent(token),
       '&page_size=25',
       '&page_number=',encodeURIComponent(pageNumber),
@@ -284,7 +287,7 @@ displayPlaylists = function (pResponse) {
 	prevButton ='', 
 	nextButton = '',
 	pageClass='',
-	pagesHTML = "<p class='pageOfPage'>Page "+(pageNumber+1)+" of " +totalNumberOfPages+"</p>";
+	pagesHTML = "<p class='pageOfPage'>Page " + ( pageNumber + 1 ) + " of " +totalNumberOfPages+"</p>";
 	
 	$('#bc-video-search-playlist').removeClass('disable');
 	$('#playlist-preview').remove();
@@ -293,16 +296,17 @@ displayPlaylists = function (pResponse) {
 		pageClass='hidden';
 		prevButton = "<button class='prev-page button' data-prevPage='"+(pageNumber-1)+"'> Previous Page </button>";
 	} 
-	if (pageNumber+1 < totalNumberOfPages ){
+	if ( pageNumber + 1 < totalNumberOfPages ){
 		nextButton = "<button class='next-page button' data-nextPage='"+(pageNumber+1)+"'> Next Page </button>";	
 	}
-	innerHTML = "<div id='playlist-page-"+pageNumber+"' class='"+pageClass+"'>"+innerHTML+pagesHTML+"<div class='button-bar'>"+prevButton+nextButton+"</div></div>";
 
 	//Add table to window
-	if (pageNumber == 0) {
+	if (totalCount == 0) {
 		$('#bc-video-search-playlist').html(innerHTML);
 	} else {
-		$('#bc-video-search-playlist').append(innerHTML);
+		innerHTML = "<div id='playlist-page-"+pageNumber+"' class='"+pageClass+"'>"+innerHTML+pagesHTML+"<div class='button-bar'>"+prevButton+nextButton+"</div></div>";
+		$('#bc-video-search-playlist').html(innerHTML);
+		$('.loading-img-api').remove();
 	}
 	
 	//Add Playlists button
@@ -417,6 +421,7 @@ generateHTMLForPlaylist = function () {
 		hideSettings('playlist');
 		seeAllPlaylists(0);
 		$('.see-all-playlists').remove();
+		$('#dynamic-bc-placeholder-playlist').remove();
 	})
 	
 	$('#bc-video-search-playlist').html('<div id="dynamic-bc-placeholder-playlist"></div>');
@@ -434,7 +439,7 @@ getAllVideos = function (pageNumber)
     token = $('#bc-api-key').val();
     /*Create URL that is called to search for videos*/
     var url= [
-      "http://api.brightcove.com/services/library&command=find_all_videos",
+      "command=find_all_videos",
       "&token=", encodeURIComponent(token),
       '&page_size=25',
       '&page_number=',encodeURIComponent(pageNumber),
@@ -453,7 +458,8 @@ displaySearchedVideos = function (pResponse) {
 	if (pResponse.items.length == 0) {
 		$('#bc-video-search-video').html('<div class="no-results bc-error error clear"><p>No results were found for this search.</p></div>').removeClass('disable');
 	} else  {
-		displayPagedVideoSearchResults (pResponse, "search"); 
+		displayPagedVideoSearchResults (pResponse, "search");
+		createShowAllVideosButton();
 	}
 	
 }
@@ -466,25 +472,28 @@ displayPagedVideoSearchResults = function (pResponse, allOrSearch) {
 	prevButton ='', 
 	nextButton = '',
 	pageClass='',
-	pagesHTML = "<p class='pageOfPage'>Page "+(pageNumber+1)+" of " +totalNumberOfPages+"</p>";
+	pagesHTML = "<p class='pageOfPage'>Page " + ( pageNumber + 1 ) + " of " + totalNumberOfPages + "</p>";
 
 	if (pageNumber > 0) {
 		pageClass='hidden';
-		prevButton = "<button class='prev-page button' data-prevPage='"+(pageNumber-1)+"'> Previous Page </button>";
+		prevButton = "<button class='prev-page button' data-prevPage='" + ( pageNumber - 1 ) + "'> Previous Page </button>";
 	} 
-	if (pageNumber+1 < totalNumberOfPages ){
-		nextButton = "<button class='next-page button' data-nextPage='"+(pageNumber+1)+"'> Next Page </button>";	
+	if (pageNumber + 1 < totalNumberOfPages ){
+		nextButton = "<button class='next-page button' data-nextPage='" + ( pageNumber + 1 ) + "'> Next Page </button>";	
 	}
-	html = "<div id='video-page-"+pageNumber+"' class='video-page "+pageClass+"'>"+html+pagesHTML+"<div class='clearfix button-bar'>"+prevButton+nextButton+"</div></div>";
-	if (pageNumber == 0) {
+
+	if (totalCount == 0) {
 		$('#bc-video-search-video').html(html).removeClass('disable');
 	} else {
-		$('#bc-video-search-video').append(html).removeClass('disable');
+		html = "<div id='video-page-" + pageNumber + "' class='video-page " + pageClass + "'>" + html + pagesHTML + "<div class='clearfix button-bar'>"+prevButton+nextButton+"</div></div>";
+		$('#bc-video-search-video').html(html).removeClass('disable');
+		$('.loading-img-api').remove();
 	}
 	$('#video-page-'+pageNumber).find('.bc-video').bind('click', function() {
-			previewVideo($(this).data('videoid'));
+		previewVideo($(this).data('videoid'));
 
-		}); 
+	});
+	 
 	$('.prev-page').bind('click', function() {
 		var pageNumber = $(this).data('prevpage');
 		showPage(pageNumber, 'video');
@@ -526,7 +535,7 @@ searchForVideos = function (pageNumber) {
     token = $('#bc-api-key').val();
     /*Create URL that is called to search for videos*/
     var url= [
-      "http://api.brightcove.com/services/library&command=search_videos",
+      "command=search_videos",
       "&token=", encodeURIComponent(token),
       "&any=search_text:", encodeURIComponent(searchParams),
       "&any=custom_fields:", encodeURIComponent(searchParams),
@@ -548,7 +557,7 @@ videoResults = function (pResponse) {
  	if (pResponse.items.length == 0) {
 		innerHTML='<div class="no-results bc-error error clear">No results were found for this search.</div>';
 		$('#bc-video-search-video').html(innerHTML).removeClass('disable');
-    
+    	
     //If results are returned display them
 	} else {
 		//Set up heading for the table
@@ -596,7 +605,9 @@ createShowAllVideosButton = function () {
 	$('#search-form').before('<button class="button see-all-videos">See All Videos</Button>');
 	$('.see-all-videos').bind('click', function () {
 		$('.see-all-videos').remove();
+		$('#dynamic-bc-placeholder-video').remove();
 		hideSettings('video');
+		$('#bc-search-field').val('');
 	  	getAllVideos(0);
 	});
 }
@@ -655,21 +666,35 @@ hideErrorMessage = function () {
 	$('#bc-error').addClass('hidden');
 }
 
-replaceTokens = function (html, data) {
-      var m;
-      var i = 0;
-      var match = html.match(data instanceof Array ? /{{\d+}}/g : /{{\w+}}/g) || [];
-      while (m = match[i++]) {
-          html = html.replace(m, data[m.substr(2, m.length-4)]);
-      }
-      return html;
-  };
+replaceTokens = function (html, data, type) {
+	var m;
+	var i = 0;
+	var match = html.match(data instanceof Array ? /{{\d+}}/g : /{{\w+}}/g) || [];
+	while (m = match[i++]) {
+		if(m.substr(2, m.length-4) === 'width' && data[m.substr(2, m.length-4)] === undefined){
+			if(type === 'video')
+				html = html.replace(m, getDefaultWidth());
+			else
+				html = html.replace(m, getDefaultWidthPlaylist());
+		}
+			
+		else if(m.substr(2, m.length-4) === 'height' && data[m.substr(2, m.length-4)] === undefined){
+			if(type === 'video')
+				html = html.replace(m, getDefaultHeight());
+			else
+				html = html.replace(m, getDefaultHeightPlaylist());
+		}
+		else
+			html = html.replace(m, data[m.substr(2, m.length-4)]);
+	}
+	return html;
+};
 
 constrain = function (str,n){
     if (str.length > n)
       return str.substr(0, n) + '&hellip;';
     return str; 
-	}
+}
 
 //validation code for player settings
 validatePlayerSettings = function (id) {
@@ -679,7 +704,7 @@ validatePlayerSettings = function (id) {
         	bcHeight: 'digits',
         	bcWidth: 'digits',
         	bcPlayer : 'digits'
-        } , 
+        }, 
         messages: {
 	        bcHeight : "Please enter a valid height",
 	        bcWidth : "Please enter a valid width",
@@ -936,12 +961,6 @@ $(function () {
 	
 	//Fix for IE for placeholder
     $(":input[placeholder]").placeholder();
-
-
-
-
 });
 
 })(jQuery);
-
-
