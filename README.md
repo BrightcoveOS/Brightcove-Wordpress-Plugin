@@ -90,62 +90,62 @@ For Video Cloud Professional and Video Cloud Enterprise Brightcove customers, th
 
 Admin settings. From here you can set your publisher id, default players for videos and playlists, add an API Read Token (if you have one), and set default width and heights for the players. 
 
-![](screenshot-1.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-1.png)
 
 
 Video tab for those without an API Read Token, videos can be accessed by entering a video ID or reference number. 
 
-![](screenshot-2.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-2.png)
 
 
 Video tab showing a live preview of the video and player selected.
 
-![](screenshot-3.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-3.png)
 
 
 Playlist tab for those without an API Read Token, playlists can be entered by giving a list of space or comma seperated IDs.
 
-![](screenshot-4.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-4.png)
 
 
 Live preview of player in playlist tab. 
 
-![](screenshot-5.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-5.png)
 
 
 Shortcode for a Brightcove player in the edit window.
 
-![](screenshot-6.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-6.png)
 
 
 Video tab on first load for those with an API Read Token. All videos for the account are loaded in pages. Videos can be selected by clicking. 
 
-![](screenshot-7.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-7.png)
 
 
 Searching for video with the word testing, returns two results.
 
-![](screenshot-8.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-8.png)
 
 
 Preview of a video in the video search tab.
 
-![](screenshot-9.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-9.png)
 
 
 Playlist tab for those with an API Read Token. All playlists for the account are loaded in pages. 
 
-![](screenshot-10.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-10.png)
 
 
 Playlists are selected by clicking checkboxes then clicking the Add Playlists button.
 
-![](screenshot-11.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-11.png)
 
 
 Live preview of playlists in playlist tab. 
 
-![](screenshot-12.png)
+![](https://raw.github.com/BrightcoveOS/Brightcove-Wordpress-Plugin/master/screenshot-12.png)
 
 ## Changelog
 
